@@ -33,13 +33,9 @@ class Email(models.Model):
         verbose_name=_ugl('HTML')
     )
     to_mailbox = models.TextField(
-        blank=False,
-        null=False,
         verbose_name=_ugl('To')
     )
     from_mailbox = models.TextField(
-        blank=False,
-        null=False,
         verbose_name=_ugl('From')
     )
     cc = models.TextField(
@@ -98,21 +94,16 @@ class Email(models.Model):
 class Attachment(models.Model):
     number = models.IntegerField(
         default=1,
-        blank=False,
-        null=False,
         verbose_name=_ugl("Email's Attachment Number")
     )
     file = models.FileField(
         upload_to=attachments_file_upload,
-        blank=False,
-        null=False,
         verbose_name=_ugl('Attached File'),
         max_length=1000,
     )
     email = models.ForeignKey(
         Email,
-        blank=False,
-        null=False,
+        on_delete=models.deletion.CASCADE,
         related_name='attachments',
         verbose_name=_ugl("Email Attached To")
     )

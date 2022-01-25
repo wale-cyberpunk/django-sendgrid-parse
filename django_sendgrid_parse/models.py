@@ -1,7 +1,7 @@
-from django.db import models
-
-from jsonfield import JSONField
 import os
+
+from django.db import models
+from django.db.models import JSONField
 
 from . import _ugl
 
@@ -61,7 +61,6 @@ class Email(models.Model):
         verbose_name=_ugl('Sender Policy Framework')
     )
     envelope = JSONField(
-        default={'to': None, 'from': None},
         blank=True,
         null=True,
         verbose_name=_ugl('Envelope')
@@ -86,9 +85,21 @@ class Email(models.Model):
        auto_now_add=True,
        verbose_name=_ugl('Creation date')
     )
-    # TODO: sender_ip
-    # TODO: attachment-info
-    # TODO: content-ids
+    content_ids = models.CharField(
+        blank=True,
+        max_length=255,
+        verbose_name=_ugl('Content ids')
+    )
+    sender_ip = models.CharField(
+        blank=True,
+        max_length=255,
+        verbose_name=_ugl('Sender ip')
+    )
+    attachment_info = JSONField(
+        blank=True,
+        null=True,
+        verbose_name=_ugl('Attachment Info')
+    )
 
 
 class Attachment(models.Model):

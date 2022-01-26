@@ -3,9 +3,9 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from .models import Attachment
+from django_sendgrid_parse.models import Attachment
 from .forms import EmailForm
-from .signals import message_received
+from django_sendgrid_parse.signals import message_received
 
 import logging
 import sys
@@ -31,7 +31,7 @@ def sendgrid_email_receiver(request):
             message_received.send(sender=None, email=form.instance)
             return HttpResponse(status=200)
 
-        return HttpResponse(status=400)
+        return HttpResponse(repr(form.errors), status=400)
 
     except Exception as e:
         logging.error(

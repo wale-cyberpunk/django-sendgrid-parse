@@ -1,7 +1,7 @@
 import os
 
 from django.db import models
-from django.db.models import JSONField
+from jsonfield import JSONField
 
 from . import _ugl
 
@@ -61,6 +61,7 @@ class Email(models.Model):
         verbose_name=_ugl('Sender Policy Framework')
     )
     envelope = JSONField(
+        default={'to': None, 'from': None},
         blank=True,
         null=True,
         verbose_name=_ugl('Envelope')

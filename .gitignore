@@ -102,3 +102,4 @@ media/
 
 django_sendgrid_parse/settings.py
 requirements.txt
+.DS_Store

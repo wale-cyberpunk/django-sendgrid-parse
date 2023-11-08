@@ -1,4 +1,6 @@
 import os
+import re
+import hashlib
 
 from django.db import models
 from jsonfield import JSONField
@@ -9,11 +11,12 @@ from . import _ugl
 def attachments_file_upload(instance, filename):
     fn, ext = os.path.splitext(filename)
 
-    to_safe = '_'.join(email.replace('@', '_at_').replace('.', '_dot_') for email in instance.email.to_mailbox.split(','))
-    to_safe = to_safe[:50]
+    emails = instance.email.to_mailbox.split(',')
+    emails_sanitized = ["_".join(filter(None, re.split(r'\W+', email)))[:10] for email in emails]
+    emails_hashed = hashlib.md5("_".join(emails_sanitized).encode('utf-8')).hexdigest()
 
     return 'emails/{to}/{id}/{fn}{ext}'.format(
-        to=instance.email.to_mailbox,
+        to=emails_hashed,
         id=instance.email.id,
         fn=fn[:25],
         ext=ext
@@ -105,6 +108,9 @@ class Email(models.Model):
         null=True,
         verbose_name=_ugl('Attachment Info')
     )
+
+    def __str__(self):
+        return f"Email from '{self.from_mailbox}' to '{self.to_mailbox}' with subject '{self.subject}'"
 
 
 class Attachment(models.Model):

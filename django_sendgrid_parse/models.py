@@ -8,6 +8,10 @@ from . import _ugl
 
 def attachments_file_upload(instance, filename):
     fn, ext = os.path.splitext(filename)
+
+    to_safe = '_'.join(email.replace('@', '_at_').replace('.', '_dot_') for email in instance.email.to_mailbox.split(','))
+    to_safe = to_safe[:50]
+
     return 'emails/{to}/{id}/{fn}{ext}'.format(
         to=instance.email.to_mailbox,
         id=instance.email.id,
